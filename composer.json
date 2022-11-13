@@ -1,21 +1,19 @@
 {
-	"name" : "knit-pay/payu-india",
-	"type" : "project",
-	"description" : "The Payum extension. Rapid extension development",
+	"name" : "knit-pay/payum-payu-india",
+	"type" : "library",
+	"description" : "The Payum extension. It provides PayU India (payu.in) and PayUBiz payment gateway integration.",
 	"keywords" : [
-		"payment"
+		"payment",
+		"payu india",
+		"payubiz",
+		"payum",
+		"payment gateway"
 	],
-	"homepage" : "https://payum.forma-pro.com",
-	"license" : "MIT",
+	"homepage" : "https://www.knitpay.org/",
+	"license" : "GPL v3",
 	"authors" : [{
-			"name" : "Kotlyar Maksim",
-			"email" : "kotlyar.maksim@gmail.com"
-		}, {
-			"name" : "Payum project",
-			"homepage" : "https://payum.forma-pro.com/"
-		}, {
-			"name" : "Community contributions",
-			"homepage" : "https://github.com/Payum/AuthorizeNetAim/contributors"
+			"name" : "Knit Pay",
+			"homepage" : "https://www.knitpay.org/"
 		}
 	],
 	"require" : {
