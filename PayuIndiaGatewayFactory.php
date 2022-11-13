@@ -1,24 +1,24 @@
 <?php
 
-namespace Payum\Skeleton;
+namespace KnitPay\PayuIndia;
 
 use Payum\Core\Bridge\Spl\ArrayObject;
 use Payum\Core\GatewayFactory;
-use Payum\Skeleton\Action\AuthorizeAction;
-use Payum\Skeleton\Action\CancelAction;
-use Payum\Skeleton\Action\CaptureAction;
-use Payum\Skeleton\Action\ConvertPaymentAction;
-use Payum\Skeleton\Action\NotifyAction;
-use Payum\Skeleton\Action\RefundAction;
-use Payum\Skeleton\Action\StatusAction;
+use KnitPay\PayuIndia\Action\AuthorizeAction;
+use KnitPay\PayuIndia\Action\CancelAction;
+use KnitPay\PayuIndia\Action\CaptureAction;
+use KnitPay\PayuIndia\Action\ConvertPaymentAction;
+use KnitPay\PayuIndia\Action\NotifyAction;
+use KnitPay\PayuIndia\Action\RefundAction;
+use KnitPay\PayuIndia\Action\StatusAction;
 
-class SkeletonGatewayFactory extends GatewayFactory
+class PayuIndiaGatewayFactory extends GatewayFactory
 {
     protected function populateConfig(ArrayObject $config)
     {
         $config->defaults([
-            'payum.factory_name' => 'skeleton',
-            'payum.factory_title' => 'skeleton',
+            'payum.factory_name' => 'payu_india',
+            'payum.factory_title' => 'PayU India',
             'payum.action.capture' => new CaptureAction(),
             'payum.action.authorize' => new AuthorizeAction(),
             'payum.action.refund' => new RefundAction(),
@@ -30,10 +30,12 @@ class SkeletonGatewayFactory extends GatewayFactory
 
         if (false == $config['payum.api']) {
             $config['payum.default_options'] = [
+                'merchant_key' => '',
+                'merchant_salt' => '',
                 'sandbox' => true,
             ];
             $config->defaults($config['payum.default_options']);
-            $config['payum.required_options'] = [];
+            $config['payum.required_options'] = ['merchant_key', 'merchant_salt'];
 
             $config['payum.api'] = function (ArrayObject $config) {
                 $config->validateNotEmpty($config['payum.required_options']);

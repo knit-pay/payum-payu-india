@@ -1,18 +1,27 @@
 <?php
 
-namespace Payum\Skeleton\Action;
+namespace KnitPay\PayuIndia\Action;
 
-use ArrayAccess;
-use LogicException;
-use Payum\Core\Action\ActionInterface;
-use Payum\Core\Bridge\Spl\ArrayObject;
-use Payum\Core\Exception\RequestNotSupportedException;
+use KnitPay\PayuIndia\Api;
+use Payum\Core\ApiAwareInterface;
+use Payum\Core\ApiAwareTrait;
+use Payum\Core\GatewayAwareInterface;
 use Payum\Core\GatewayAwareTrait;
+use Payum\Core\Action\ActionInterface;
+use Payum\Core\Exception\RequestNotSupportedException;
+use Payum\Core\Request\GetCurrency;
 use Payum\Core\Request\Refund;
+use ArrayAccess;
 
-class RefundAction implements ActionInterface
+class RefundAction implements ActionInterface, ApiAwareInterface, GatewayAwareInterface
 {
+    use ApiAwareTrait;
     use GatewayAwareTrait;
+
+    public function __construct()
+    {
+        $this->apiClass = Api::class;
+    }
 
     /**
      * @param Refund $request
@@ -21,9 +30,12 @@ class RefundAction implements ActionInterface
     {
         RequestNotSupportedException::assertSupports($this, $request);
 
-        $model = ArrayObject::ensureArrayObject($request->getModel());
+        $payment = $request->getFirstModel();
 
-        throw new LogicException('Not implemented');
+        $this->gateway->execute($currency = new GetCurrency($payment->getCurrencyCode()));
+        $divisor = 10 ** $currency->exp;
+
+        return $this->api->cancel_refund_transaction($payment->getNumber(), uniqid( 'refund_' ), $payment->getTotalAmount() / $divisor);
     }
 
     public function supports($request)

@@ -1,5 +1,5 @@
 {
-	"name" : "payum/skeleton",
+	"name" : "knit-pay/payu-india",
 	"type" : "project",
 	"description" : "The Payum extension. Rapid extension development",
 	"keywords" : [
@@ -29,10 +29,10 @@
 	},
 	"autoload" : {
 		"psr-0" : {
-			"Payum\\Skeleton" : ""
+			"KnitPay\\PayuIndia" : ""
 		}
 	},
-	"target-dir" : "Payum/Skeleton",
+	"target-dir" : "KnitPay/PayuIndia",
 	"extra" : {
 		"branch-alias" : {
 			"dev-master" : "2.0.x-dev"

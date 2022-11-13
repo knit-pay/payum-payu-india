@@ -1,6 +1,6 @@
 <?php
 
-namespace Payum\Skeleton\Action;
+namespace KnitPay\PayuIndia\Action;
 
 use ArrayAccess;
 use LogicException;
