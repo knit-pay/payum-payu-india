@@ -1,41 +1,46 @@
-<h2 align="center">Supporting Payum</h2>
 
-Payum is an MIT-licensed open source project with its ongoing development made possible entirely by the support of community and our customers. If you'd like to join them, please consider:
 
-- [Become a sponsor](https://www.patreon.com/makasim)
-- [Become our client](http://forma-pro.com/)
 
----
+# Payum PayU India and PayUBiz Extension
 
-# Skeleton
+The Payum extension. It provides [PayU India](http://go.thearrangers.xyz/payu?utm_source=knit-pay&utm_medium=ecommerce-module&utm_campaign=github&utm_content=help-signup) and PayUBiz payment integration.
 
-The Payum extension to rapidly build new extensions.
+Before proceeding, kindly create an account at **PayU** if you don't have one already.
+<br>
+[Sign Up on PayU Live](http://go.thearrangers.xyz/payu?utm_source=knit-pay&utm_medium=ecommerce-module&utm_campaign=github&utm_content=help-signup)
 
-1. Create new project
+For Testing, kindly create an account at **PayU UAT Dashboard** if you don't have one already.
+<br>
+[Sign Up on PayU Test/UAT](https://test.payumoney.com/url/QIJLMsgaurL3)
+
+## Support
+Feel free to contact us for any kind of support required.
+https://www.knitpay.org/contact-us/
+
+## Installation
+
+The preferred way to install the library is using [composer](http://getcomposer.org/).
+Run composer require to add dependencies to _composer.json_:
 
 ```bash
-$ composer create-project payum/skeleton
+php composer.phar require knit-pay/payum-payu-india php-http/guzzle6-adapter
 ```
-
-2. Replace all occurrences of `payum` with your vendor name. It may be your github name, for now let's say you choose: `acme`.
-3. Replace all occurrences of `skeleton` with a payment gateway name. For example Stripe, Paypal etc. For now let's say you choose: `paypal`.
-4. Register a gateway factory to the payum's builder and create a gateway:
+## Register the `payu_india` Payum factory using `PayumBuilder` (config.php):
 
 ```php
-<?php
-
-use Payum\Core\PayumBuilder;
 use Payum\Core\GatewayFactoryInterface;
+use KnitPay\PayuIndia\PayuIndiaGatewayFactory;
 
-$defaultConfig = [];
-
-$payum = (new PayumBuilder)
-    ->addGatewayFactory('paypal', function(array $config, GatewayFactoryInterface $coreGatewayFactory) {
-        return new \Acme\Paypal\PaypalGatewayFactory($config, $coreGatewayFactory);
+$payum = (new PayumBuilder())
+    ->addDefaultStorages()
+    ->addGatewayFactory('payu_india', function(array $config, GatewayFactoryInterface $gatewayFactory) {
+        return new PayuIndiaGatewayFactory($config, $gatewayFactory);
     })
-
-    ->addGateway('paypal', [
-        'factory' => 'paypal',
+        
+    ->addGateway('payu_india', [
+        'factory' => 'payu_india',
+        'merchant_key' => 'Key', // Change this.
+        'merchant_salt' => 'Salt', // Change this.
         'sandbox' => true,
     ])
 
@@ -43,38 +48,59 @@ $payum = (new PayumBuilder)
 ;
 ```
 
-5. While using the gateway implement all method where you get `Not implemented` exception:
+## prepare.php
+
+Here you have to modify a `gatewayName` value. Set it to `payu_india`. The rest remain almost the same as described in basic [get it started](https://github.com/Payum/Payum/blob/master/docs/get-it-started.md) documentation.
+Optional fields can be added as shown in the code below.
 
 ```php
-<?php
+$gatewayName = 'payu_india';
 
-use Payum\Core\Request\Capture;
+/** @var \Payum\Core\Payum $payum */
+$storage = $payum->getStorage($paymentClass);
 
-$paypal = $payum->getGateway('paypal');
+$payment = $storage->create();
+$payment->setNumber(uniqid());
+$payment->setCurrencyCode('INR');
+$payment->setTotalAmount(123); // 1.23 INR
+$payment->setDescription('A description');
+$payment->setClientId('anId');
+$payment->setClientEmail('foo@example.com');
 
-$model = new \ArrayObject([
-  // ...
-]);
-
-$paypal->execute(new Capture($model));
+$payment->setDetails(array(
+  // put here any fields in a gateway format.
+  // for example if you use PayU India you can define optional fields like this.
+  // Kindly refer to this link for more details. https://devguide.payu.in/docs/payu-hosted-checkout/payu-hosted-checkout-integration/https://devguide.payu.in/docs/payu-hosted-checkout/payu-hosted-checkout-integration/
+  // Uncomment the optional field below that you want to pass to the payment gateway.
+    //'firstname'          => 'First Name',
+    //'lastname'           => 'Last Name',
+    //'address1'           => 'Address Line 1',
+    //'address2'           => 'Address Line 2',
+    //'city'               => 'City',
+    //'state'              => 'State',
+    //'country'            => 'Country',
+    //'zipcode'            => 'Zip Code',
+    //'phone'              => 'Phone Number',
+    //'pg'                 => 'CC',
+    //'enforce_paymethod'  => 'creditcard',
+    //'display_lang'       => 'Hindi'
+));
 ```
+## capture.php
+capture.php remains almost the same as described in basic [get it started](https://github.com/Payum/Payum/blob/master/docs/get-it-started.md) documentation.
+Although there is a minor modification. We need need to handle the HttpPostRedirect response also.
 
-## Resources
+```php
+/** @var \Payum\Core\GatewayInterface $gateway */
+if ($reply = $gateway->execute(new Capture($token), true)) {
+    if ($reply instanceof HttpRedirect) {
+        header("Location: ".$reply->getUrl());
+        die();
+    } elseif ($reply instanceof HttpPostRedirect) {
+        echo $reply->getContent();
+        die();
+    }
 
-* [Site](https://payum.forma-pro.com/)
-* [Documentation](https://github.com/Payum/Payum/blob/master/docs/index.md#general)
-* [Questions](http://stackoverflow.com/questions/tagged/payum)
-* [Issue Tracker](https://github.com/Payum/Payum/issues)
-* [Twitter](https://twitter.com/payumphp)
-
-## Developed by Forma-Pro
-
-Forma-Pro is a full stack development company which interests also spread to open source development. 
-Being a team of strong professionals we have an aim an ability to help community by developing cutting edge solutions in the areas of e-commerce, docker & microservice oriented architecture where we have accumulated a huge many-years experience. 
-Our main specialization is Symfony framework based solution, but we are always looking to the technologies that allow us to do our job the best way. We are committed to creating solutions that revolutionize the way how things are developed in aspects of architecture & scalability.
-
-If you have any questions and inquires about our open source development, this product particularly or any other matter feel free to contact at opensource@forma-pro.com
-
-## License
-
-Skeleton is released under the [MIT License](LICENSE).
+    throw new \LogicException('Unsupported reply', null, $reply);
+}
+```
