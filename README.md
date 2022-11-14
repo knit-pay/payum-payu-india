@@ -13,10 +13,6 @@ For Testing, kindly create an account at **PayU UAT Dashboard** if you don't hav
 <br>
 [Sign Up on PayU Test/UAT](https://test.payumoney.com/url/QIJLMsgaurL3)
 
-## Support
-Feel free to contact us for any kind of support required.
-https://www.knitpay.org/contact-us/
-
 ## Installation
 
 The preferred way to install the library is using [composer](http://getcomposer.org/).
@@ -50,7 +46,7 @@ $payum = (new PayumBuilder())
 
 ## prepare.php
 
-Here you have to modify a `gatewayName` value. Set it to `payu_india`. The rest remain almost the same as described in basic [get it started](https://github.com/Payum/Payum/blob/master/docs/get-it-started.md) documentation.
+Here you have to modify a `gatewayName` value. Set it to `payu_india`. The rest remain almost the same as described in basic [get it started](https://github.com/Payum/Payum/blob/master/docs/get-it-started.md#preparephp) documentation.
 Optional fields can be added as shown in the code below.
 
 ```php
@@ -87,7 +83,7 @@ $payment->setDetails(array(
 ));
 ```
 ## capture.php
-capture.php remains almost the same as described in basic [get it started](https://github.com/Payum/Payum/blob/master/docs/get-it-started.md) documentation.
+capture.php remains almost the same as described in basic [get it started](https://github.com/Payum/Payum/blob/master/docs/get-it-started.md#capturephp) documentation.
 Although there is a minor modification. We need need to handle the HttpPostRedirect response also.
 
 ```php
@@ -104,3 +100,7 @@ if ($reply = $gateway->execute(new Capture($token), true)) {
     throw new \LogicException('Unsupported reply', null, $reply);
 }
 ```
+
+## Support
+Feel free to contact us for any kind of support required.
+https://www.knitpay.org/contact-us/
