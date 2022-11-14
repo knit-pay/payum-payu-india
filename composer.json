@@ -33,7 +33,7 @@
 	"target-dir" : "KnitPay/PayuIndia",
 	"extra" : {
 		"branch-alias" : {
-			"dev-master" : "master-dev"
+			"dev-master" : "2.0.x-dev"
 		}
 	}
 }
