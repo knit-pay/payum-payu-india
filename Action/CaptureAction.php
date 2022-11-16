@@ -49,7 +49,7 @@ class CaptureAction implements ActionInterface, ApiAwareInterface, GatewayAwareI
         $post_param = $model->toUnsafeArray();
         $post_param = $this->api->addGlobalParams($post_param);
 
-        $return_url = $request->getToken()->getTargetUrl();
+        $return_url = $request->getToken()->getAfterUrl();
         $return_url = HttpUri::createFromString($return_url);
         $return_url = UriModifier::mergeQuery($return_url, 'return=1');
         $post_param['surl'] = $return_url;

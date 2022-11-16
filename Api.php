@@ -4,6 +4,7 @@ namespace KnitPay\PayuIndia;
 
 use Http\Message\MessageFactory;
 use Payum\Core\HttpClientInterface;
+use Payum\Core\Bridge\Spl\ArrayObject;
 use Payum\Core\Exception\InvalidArgumentException;
 use Payum\Core\Exception\Http\HttpException;
 use LogicException;
@@ -42,6 +43,17 @@ class Api
      */
     public function __construct(array $options, HttpClientInterface $client, MessageFactory $messageFactory)
     {
+        $options = ArrayObject::ensureArrayObject($options);
+        $options->defaults($this->options);
+        $options->validateNotEmpty(array(
+            'merchant_key',
+            'merchant_salt',
+        ));
+
+        if (false == is_bool($options['sandbox'])) {
+            throw new InvalidArgumentException('The boolean sandbox option must be set.');
+        }
+
         $this->options = $options;
         $this->client = $client;
         $this->messageFactory = $messageFactory;
